@@ -25,10 +25,10 @@ namespace Snake
         private const int DOT_SIZE = 16;    // размер одной ячейки змейки в px
         private const int ALL_DOTS = 512;
 
-        // статус в игре игорок или нет
+        // статус в игре игрок или нет
         private bool inGame = true;
 
-        //направления движения змейки
+        // направления движения змейки
         private bool right = true;
         private bool left = false;
         private bool up = false;
@@ -40,13 +40,14 @@ namespace Snake
         private int counterScore = 0;   // счёт
         private int[] x = new int[ALL_DOTS];
         private int[] y = new int[ALL_DOTS];
-
+        
         private Image dot;      // текстура змейки
         private Image apple;    // текстура яблока
         private Image border;   // тексура границы карты
         private Image field;    // текстура игрового поля
 
-        private DispatcherTimer timer;    // 
+        private DispatcherTimer timer;    // таймер
+        private double timeSpeed = 0.35;    // скорость игры (чем меньше, тем быстрее)
 
         public MainWindow()
         {
@@ -64,6 +65,7 @@ namespace Snake
 
         private void initGame()
         {
+            scoreLabel.Content = "Score: " + counterScore;
             dots = 3;
 
             // Начальное положение змейки:
@@ -74,7 +76,7 @@ namespace Snake
             }
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(0.5);
+            timer.Interval = TimeSpan.FromSeconds(timeSpeed);
             timer.Tick += MainGameLoop;
             timer.Start();
             createApple();
@@ -82,13 +84,21 @@ namespace Snake
 
         private void createApple()
         {
-            appleX = new Random(20).Next() * DOT_SIZE;
-            appleY = new Random(20).Next() * DOT_SIZE;
+            do
+            {
+                appleX = new Random().Next(DOT_SIZE, SIZE - DOT_SIZE);
+            } while (appleX % DOT_SIZE != 0);
+            do
+            {
+                appleY = new Random().Next(DOT_SIZE, SIZE - DOT_SIZE);
+            } while (appleY % DOT_SIZE != 0);
         }
 
         private void loadImages()
         {
-            
+            //border = new Image();
+            //border.HorizontalAlignment = HorizontalAlignment.Left;
+            //border.VerticalAlignment = VerticalAlignment.Top;
         }
 
         private void move()
@@ -123,7 +133,8 @@ namespace Snake
             {
                 dots++;
                 createApple();
-                counterScore += 5; // Очки за яблоко
+                counterScore++; // Очки за яблоко
+                scoreLabel.Content = "Score: " + counterScore;
             }
         }
 
@@ -159,12 +170,16 @@ namespace Snake
         {
             if (inGame)
             {
-                drawSnake();
-                drawApple();
+                gameStatusLabel.Content = "Status: In Game";
+                move();
                 checkApple();
                 checkCollisions();
-                move();
+                drawField();
+                drawApple();
+                drawSnake();
+                return;
             }
+            gameStatusLabel.Content = "Status: Game Over";
         }
 
         private void drawBorders()
@@ -229,16 +244,88 @@ namespace Snake
 
         private void drawField()
         {
+            if (field == null)
+            {
+                Rectangle field = new Rectangle();
+
+                field.Fill = Brushes.GreenYellow;
+                field.Stroke = Brushes.GreenYellow;
+                field.HorizontalAlignment = HorizontalAlignment.Left;
+                field.VerticalAlignment = VerticalAlignment.Top;
+
+                field.Width = field.Height = SIZE - 2 * DOT_SIZE;
+
+                // field
+                field.Margin = new Thickness
+                {
+                    Left = DOT_SIZE,
+                    Top = DOT_SIZE,
+                };
+                gameField.Children.Add(field);
+
+                return;
+            }
+            // если есть текстура
+
 
         }
 
         private void drawSnake()
         {
+            if (dot == null)
+            {
+                for (int i = 0; i < dots; i++)
+                {
+                    Rectangle snakeDot = new Rectangle();
+
+                    snakeDot.Fill = Brushes.DarkOliveGreen;
+                    snakeDot.Stroke = Brushes.DarkOliveGreen;
+                    snakeDot.HorizontalAlignment = HorizontalAlignment.Left;
+                    snakeDot.VerticalAlignment = VerticalAlignment.Top;
+
+                    snakeDot.Width = snakeDot.Height = DOT_SIZE;
+
+                    // apple
+                    snakeDot.Margin = new Thickness
+                    {
+                        Left = x[i],
+                        Top = y[i],
+                    };
+                    gameField.Children.Add(snakeDot);
+                }
+
+                return;
+            }
+            // если есть текстура
 
         }
 
         private void drawApple()
         {
+            if (apple == null)
+            {
+                Rectangle myApple = new Rectangle();
+
+                myApple.Fill = Brushes.Red;
+                myApple.Stroke = Brushes.Red;
+                myApple.HorizontalAlignment = HorizontalAlignment.Left;
+                myApple.VerticalAlignment = VerticalAlignment.Top;
+
+                myApple.Width = myApple.Height = DOT_SIZE;
+
+                // apple
+                myApple.Margin = new Thickness
+                {
+                    Left = appleX,
+                    Top = appleY,
+                };
+
+                gameField.Children.Add(myApple);
+
+                return;
+            }
+            // если есть текстура
+
 
         }
 
