@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        KeyDown="myKeyDown"
+        Title="Snake Game" HorizontalAlignment="Left" VerticalAlignment="Top" Height="551" Width="656" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Canvas Name="gameField" Width="640" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Rectangle Height="45" Width="58" Canvas.Left="292" Canvas.Top="195" Margin="10,0,0,0" />
+    </Canvas>
 </Window>
