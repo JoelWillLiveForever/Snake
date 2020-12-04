@@ -46,8 +46,8 @@ namespace Snake
         private Image border;   // тексура границы карты
         private Image field;    // текстура игрового поля
 
-        private DispatcherTimer timer;    // таймер
-        private double timeSpeed = 0.35;    // скорость игры (чем меньше, тем быстрее)
+        private DispatcherTimer timer;    // таймер 
+        double speed = 0.2;    // скорость игры (чем меньше, тем быстрее)
 
         public MainWindow()
         {
@@ -66,7 +66,7 @@ namespace Snake
         private void initGame()
         {
             scoreLabel.Content = "Score: " + counterScore;
-            dots = 3;
+            dots = 2;
 
             // Начальное положение змейки:
             for (int i = 0; i < dots; i++)
@@ -76,7 +76,7 @@ namespace Snake
             }
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(timeSpeed);
+            UpdateSpeed();
             timer.Tick += MainGameLoop;
             timer.Start();
             createApple();
@@ -134,6 +134,7 @@ namespace Snake
                 dots++;
                 createApple();
                 counterScore++; // Очки за яблоко
+                UpdateSpeed();
                 scoreLabel.Content = "Score: " + counterScore;
             }
         }
@@ -144,25 +145,95 @@ namespace Snake
             {
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
-                    inGame = false;
+                    timer.Stop();
+                    MessageBox.Show("You hit the wall! Your score: " + counterScore);
+                    MessageBox.Show("You can continue by pressing OK");
+                    timer.Start();
+                    speed = 0.2;
+                    UpdateSpeed();
+                    dots = 2;
+                    counterScore = 0;
+                    for (int j = 0; j < dots; j++)
+                    {
+                        x[j] = 48 - (j * DOT_SIZE);
+                        y[j] = 48;
+                    }
+                    drawBorders();
+                    scoreLabel.Content = "Score: " + counterScore;
                 }
             }
 
             if (x[0] > SIZE)
             {
-                inGame = false;
+                timer.Stop();
+                MessageBox.Show("You hit the wall! Your score: " + counterScore);
+                MessageBox.Show("You can continue by pressing OK");
+                timer.Start();
+                speed = 0.2;
+                UpdateSpeed();
+                dots = 2;
+                counterScore = 0;
+                for (int i = 0; i < dots; i++)
+                {
+                    x[i] = 48 - (i * DOT_SIZE);
+                    y[i] = 48;
+                }
+                drawBorders();
+                scoreLabel.Content = "Score: " + counterScore;
             }
             if (x[0] < 0)
             {
-                inGame = false;
+                timer.Stop();
+                MessageBox.Show("You hit the wall! Your score: " + counterScore);
+                MessageBox.Show("You can continue by pressing OK");
+                timer.Start();
+                speed = 0.2;
+                UpdateSpeed();
+                dots = 2;
+                counterScore = 0;
+                for (int i = 0; i < dots; i++)
+                {
+                    x[i] = 48 - (i * DOT_SIZE);
+                    y[i] = 48;
+                }
+                drawBorders();
+                scoreLabel.Content = "Score: " + counterScore;
             }
             if (y[0] > SIZE)
             {
-                inGame = false;
+                timer.Stop();
+                MessageBox.Show("You hit the wall! Your score: " + counterScore);
+                MessageBox.Show("You can continue by pressing OK");
+                timer.Start();
+                speed = 0.2;
+                UpdateSpeed();
+                dots = 2;
+                counterScore = 0;
+                for (int i = 0; i < dots; i++)
+                {
+                    x[i] = 48 - (i * DOT_SIZE);
+                    y[i] = 48;
+                }
+                drawBorders();
+                scoreLabel.Content = "Score: " + counterScore;
             }
             if (y[0] < 0)
             {
-                inGame = false;
+                timer.Stop();
+                MessageBox.Show("You hit the wall! Your score: " + counterScore);
+                MessageBox.Show("You can continue by pressing OK");
+                timer.Start();
+                speed = 0.2;
+                UpdateSpeed();
+                dots = 2;
+                counterScore = 0;
+                for (int i = 0; i < dots; i++)
+                {
+                    x[i] = 48 - (i * DOT_SIZE);
+                    y[i] = 48;
+                }
+                drawBorders();
+                scoreLabel.Content = "Score: " + counterScore;
             }
         }
 
@@ -179,7 +250,6 @@ namespace Snake
                 drawSnake();
                 return;
             }
-            gameStatusLabel.Content = "Status: Game Over";
         }
 
         private void drawBorders()
@@ -328,34 +398,110 @@ namespace Snake
 
 
         }
+        
+
+        private void UpdateSpeed()
+        {
+			//if (counterScore == 0)
+			//{
+			//	speed = 0.3;
+			//}
+			//if (counterScore > 4 && counterScore < 10)
+			//{
+			//	speed -= 0.1;
+			//}
+			//else
+			//{
+			//	if (counterScore > 9 && counterScore < 15)
+			//	{
+			//		speed -= 0.125;
+			//	}
+			//	else
+			//	{
+			//		if (counterScore > 14 && counterScore < 20)
+			//		{
+			//			speed -= 0.15;
+			//		}
+			//		else
+			//		{
+			//			if (counterScore >= 20)
+			//			{
+			//				speed -= 0.2;
+			//			}
+			//		}
+			//	}
+			//}
+			if (counterScore % 2 == 0 && counterScore != 0)
+            {
+                speed -= 0.005;
+			}
+            speedLabel.Content = "Speed: " + speed;
+            timer.Interval = TimeSpan.FromSeconds(speed);
+        }
 
         // Обработчик нажатий
         private void myKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.A || e.Key == Key.Left && !right)
+            switch (e.Key.ToString())
             {
-                up = false;
-                down = false;
-                left = true;
+                case "Right":
+                    up = false;
+                    right = true;
+                    down = false;
+                    left = false;
+                    break;
+                case "Left":
+                    up = false;
+                    left = true;
+                    down = false;
+                    right = false;
+                    break;
+                case "Up":
+                    up = true;
+                    down = false;
+                    left = false;
+                    right = false;
+                    break;
+                case "Down":
+                    up = false;
+                    down = true;
+                    left = false;
+                    right = false;
+                    break;
+                default:
+                    timer.Stop();
+                    MessageBox.Show("Pause! Your score for now: " + counterScore + "\n To continue press Ok!");
+                    timer.Start();
+                    break;
             }
-            else if (e.Key == Key.D || e.Key == Key.Right && !left)
-            {
-                up = false;
-                down = false;
-                right = true;
-            }
-            else if (e.Key == Key.W || e.Key == Key.Up && !down)
-            {
-                left = false;
-                right = false;
-                up = true;
-            }
-            else if (e.Key == Key.S || e.Key == Key.Down && !up)
-            {
-                left = false;
-                right = false;
-                down = true;
-            }
+
         }
+        //private void myKeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.A || e.Key == Key.Left && !right)
+        //    {
+        //        up = false;
+        //        down = false;
+        //        left = true;
+        //    }
+        //    else if (e.Key == Key.D || e.Key == Key.Right && !left)
+        //    {
+        //        up = false;
+        //        down = false;
+        //        right = true;
+        //    }
+        //    else if (e.Key == Key.W || e.Key == Key.Up && !down)
+        //    {
+        //        left = false;
+        //        right = false;
+        //        up = true;
+        //    }
+        //    else if (e.Key == Key.S || e.Key == Key.Down && !up)
+        //    {
+        //        left = false;
+        //        right = false;
+        //        down = true;
+        //    }
+        //}
     }
 }
