@@ -146,7 +146,7 @@ namespace Snake
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
                     timer.Stop();
-                    MessageBox.Show("You hit the wall! Your score: " + counterScore);
+                    MessageBox.Show("You have eaten yourself! Your score: " + counterScore);
                     MessageBox.Show("You can continue by pressing OK");
                     timer.Start();
                     speed = 0.2;
