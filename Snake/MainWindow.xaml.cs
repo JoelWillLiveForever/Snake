@@ -25,9 +25,6 @@ namespace Snake
         private const int DOT_SIZE = 16;    // размер одной ячейки змейки в px
         private const int ALL_DOTS = 512;
 
-        // статус в игре игрок или нет
-        private bool inGame = true;
-
         // направления движения змейки
         private bool right = true;
         private bool left = false;
@@ -43,7 +40,7 @@ namespace Snake
         
         private Image dot;      // текстура змейки
         private Image apple;    // текстура яблока
-        private Image border;   // тексура границы карты
+        private Image border;   // текстура границы карты
         private Image field;    // текстура игрового поля
 
         private DispatcherTimer timer;    // таймер 
@@ -83,7 +80,7 @@ namespace Snake
         }
 
         private void createApple()
-        {
+        {   
             do
             {
                 appleX = new Random().Next(DOT_SIZE, SIZE - DOT_SIZE);
@@ -131,6 +128,7 @@ namespace Snake
         {
             if (x[0] == appleX && y[0] == appleY)
             {
+                FruitExistance = false;
                 dots++;
                 createApple();
                 counterScore++; // Очки за яблоко
@@ -145,10 +143,11 @@ namespace Snake
             {
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
-                    timer.Stop();
+                    //timer.Stop();
+                    gameStatusLabel.Content = "Status: Game Over";
                     MessageBox.Show("You have eaten yourself! Your score: " + counterScore);
                     MessageBox.Show("You can continue by pressing OK");
-                    timer.Start();
+                    //timer.Start();
                     speed = 0.2;
                     UpdateSpeed();
                     dots = 2;
@@ -163,12 +162,13 @@ namespace Snake
                 }
             }
 
-            if (x[0] > SIZE)
+            if (x[0] > SIZE - 2*DOT_SIZE)
             {
-                timer.Stop();
+                //timer.Stop();
+                gameStatusLabel.Content = "Status: Game Over";
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                timer.Start();
+                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -181,12 +181,13 @@ namespace Snake
                 drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
-            if (x[0] < 0)
+            if (x[0] < 0 + DOT_SIZE)
             {
-                timer.Stop();
+                //timer.Stop();
+                gameStatusLabel.Content = "Status: Game Over";
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                timer.Start();
+                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -199,12 +200,13 @@ namespace Snake
                 drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
-            if (y[0] > SIZE)
+            if (y[0] > SIZE - 2*DOT_SIZE)
             {
-                timer.Stop();
+                //timer.Stop();
+                gameStatusLabel.Content = "Status: Game Over";
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                timer.Start();
+                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -217,12 +219,13 @@ namespace Snake
                 drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
-            if (y[0] < 0)
+            if (y[0] < 0 + DOT_SIZE)
             {
-                timer.Stop();
+                //timer.Stop();
+                gameStatusLabel.Content = "Status: Game Over";
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                timer.Start();
+                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -239,17 +242,15 @@ namespace Snake
 
         private void update()
         {
-            if (inGame)
-            {
-                gameStatusLabel.Content = "Status: In Game";
-                move();
-                checkApple();
-                checkCollisions();
-                drawField();
-                drawApple();
-                drawSnake();
-                return;
-            }
+            gameStatusLabel.Content = "Status: In Game";
+            move();
+            checkApple();
+            checkCollisions();
+            drawField();
+            drawApple();
+            drawBorders();
+            drawSnake();
+            return;
         }
 
         private void drawBorders()
@@ -344,12 +345,26 @@ namespace Snake
         {
             if (dot == null)
             {
-                for (int i = 0; i < dots; i++)
+                Image SnakeHead = new Image(); // голова змеи
+
+                SnakeHead.Source = new BitmapImage(new Uri("Resources/headOfSnake.png", UriKind.Relative));
+                SnakeHead.HorizontalAlignment = HorizontalAlignment.Left;
+                SnakeHead.VerticalAlignment = VerticalAlignment.Top;
+                SnakeHead.Width = SnakeHead.Height = DOT_SIZE;
+
+                SnakeHead.Margin = new Thickness
+                {
+                    Left = x[0],
+                    Top = y[0],
+                };
+                gameField.Children.Add(SnakeHead);
+
+                for (int i = 1; i < dots; i++) // остальное тело змеи
                 {
                     Rectangle snakeDot = new Rectangle();
 
-                    snakeDot.Fill = Brushes.DarkOliveGreen;
-                    snakeDot.Stroke = Brushes.DarkOliveGreen;
+                    snakeDot.Fill = Brushes.DarkGreen;
+                    snakeDot.Stroke = Brushes.DarkGreen;
                     snakeDot.HorizontalAlignment = HorizontalAlignment.Left;
                     snakeDot.VerticalAlignment = VerticalAlignment.Top;
 
@@ -376,6 +391,12 @@ namespace Snake
             {
                 Rectangle myApple = new Rectangle();
 
+                //SolidColorBrush[] brushes = { Brushes.Red, Brushes.Yellow, Brushes.Orange, Brushes.Purple };
+                //int indexOfColor = new Random().Next(brushes.Length);
+
+                //myApple.Fill = brushes[indexOfColor];
+                //myApple.Stroke = brushes[indexOfColor];
+                
                 myApple.Fill = Brushes.Red;
                 myApple.Stroke = Brushes.Red;
                 myApple.HorizontalAlignment = HorizontalAlignment.Left;
@@ -396,41 +417,11 @@ namespace Snake
             }
             // если есть текстура
 
-
         }
         
 
         private void UpdateSpeed()
         {
-			//if (counterScore == 0)
-			//{
-			//	speed = 0.3;
-			//}
-			//if (counterScore > 4 && counterScore < 10)
-			//{
-			//	speed -= 0.1;
-			//}
-			//else
-			//{
-			//	if (counterScore > 9 && counterScore < 15)
-			//	{
-			//		speed -= 0.125;
-			//	}
-			//	else
-			//	{
-			//		if (counterScore > 14 && counterScore < 20)
-			//		{
-			//			speed -= 0.15;
-			//		}
-			//		else
-			//		{
-			//			if (counterScore >= 20)
-			//			{
-			//				speed -= 0.2;
-			//			}
-			//		}
-			//	}
-			//}
 			if (counterScore % 2 == 0 && counterScore != 0)
             {
                 speed -= 0.005;
@@ -476,32 +467,5 @@ namespace Snake
             }
 
         }
-        //private void myKeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if (e.Key == Key.A || e.Key == Key.Left && !right)
-        //    {
-        //        up = false;
-        //        down = false;
-        //        left = true;
-        //    }
-        //    else if (e.Key == Key.D || e.Key == Key.Right && !left)
-        //    {
-        //        up = false;
-        //        down = false;
-        //        right = true;
-        //    }
-        //    else if (e.Key == Key.W || e.Key == Key.Up && !down)
-        //    {
-        //        left = false;
-        //        right = false;
-        //        up = true;
-        //    }
-        //    else if (e.Key == Key.S || e.Key == Key.Down && !up)
-        //    {
-        //        left = false;
-        //        right = false;
-        //        down = true;
-        //    }
-        //}
     }
 }
