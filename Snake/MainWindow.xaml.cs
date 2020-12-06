@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -68,8 +69,8 @@ namespace Snake
             // Начальное положение змейки:
             for (int i = 0; i < dots; i++)
             {
-                x[i] = 48 - (i * DOT_SIZE);
-                y[i] = 48;
+                x[i] = 192 - (i * DOT_SIZE);
+                y[i] = 144;
             }
 
             timer = new DispatcherTimer();
@@ -93,7 +94,11 @@ namespace Snake
 
         private void loadImages()
         {
-            //border = new Image();
+            //OpenFileDialog openFile = new OpenFileDialog();
+            //if (openFile.ShowDialog() == true)
+            //{
+            //    border.Source = new BitmapImage(new Uri(openFile.FileName));
+            //}
             //border.HorizontalAlignment = HorizontalAlignment.Left;
             //border.VerticalAlignment = VerticalAlignment.Top;
         }
@@ -128,7 +133,6 @@ namespace Snake
         {
             if (x[0] == appleX && y[0] == appleY)
             {
-                FruitExistance = false;
                 dots++;
                 createApple();
                 counterScore++; // Очки за яблоко
@@ -143,99 +147,99 @@ namespace Snake
             {
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
-                    //timer.Stop();
                     gameStatusLabel.Content = "Status: Game Over";
+                    Death_Sound();
                     MessageBox.Show("You have eaten yourself! Your score: " + counterScore);
                     MessageBox.Show("You can continue by pressing OK");
-                    //timer.Start();
                     speed = 0.2;
                     UpdateSpeed();
                     dots = 2;
                     counterScore = 0;
+
+                    // Начальное положение змейки:
                     for (int j = 0; j < dots; j++)
                     {
-                        x[j] = 48 - (j * DOT_SIZE);
-                        y[j] = 48;
+                        x[j] = 192 - (j * DOT_SIZE);
+                        y[j] = 144;
                     }
-                    drawBorders();
                     scoreLabel.Content = "Score: " + counterScore;
                 }
             }
 
             if (x[0] > SIZE - 2*DOT_SIZE)
             {
-                //timer.Stop();
                 gameStatusLabel.Content = "Status: Game Over";
+                Death_Sound();
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
                 counterScore = 0;
+
+                // Начальное положение змейки:
                 for (int i = 0; i < dots; i++)
                 {
-                    x[i] = 48 - (i * DOT_SIZE);
-                    y[i] = 48;
+                    x[i] = 192 - (i * DOT_SIZE);
+                    y[i] = 144;
                 }
-                drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
             if (x[0] < 0 + DOT_SIZE)
             {
-                //timer.Stop();
                 gameStatusLabel.Content = "Status: Game Over";
+                Death_Sound();
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
                 counterScore = 0;
+
+                // Начальное положение змейки:
                 for (int i = 0; i < dots; i++)
                 {
-                    x[i] = 48 - (i * DOT_SIZE);
-                    y[i] = 48;
+                    x[i] = 192 - (i * DOT_SIZE);
+                    y[i] = 144;
                 }
-                drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
             if (y[0] > SIZE - 2*DOT_SIZE)
             {
-                //timer.Stop();
                 gameStatusLabel.Content = "Status: Game Over";
+                Death_Sound();
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
                 counterScore = 0;
+
+                // Начальное положение змейки:
                 for (int i = 0; i < dots; i++)
                 {
-                    x[i] = 48 - (i * DOT_SIZE);
-                    y[i] = 48;
+                    x[i] = 192 - (i * DOT_SIZE);
+                    y[i] = 144;
                 }
-                drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
             if (y[0] < 0 + DOT_SIZE)
             {
-                //timer.Stop();
                 gameStatusLabel.Content = "Status: Game Over";
+                Death_Sound();
                 MessageBox.Show("You hit the wall! Your score: " + counterScore);
                 MessageBox.Show("You can continue by pressing OK");
-                //timer.Start();
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
                 counterScore = 0;
+
+                // Начальное положение змейки:
                 for (int i = 0; i < dots; i++)
                 {
-                    x[i] = 48 - (i * DOT_SIZE);
-                    y[i] = 48;
+                    x[i] = 192 - (i * DOT_SIZE);
+                    y[i] = 144;
                 }
-                drawBorders();
                 scoreLabel.Content = "Score: " + counterScore;
             }
         }
@@ -248,7 +252,6 @@ namespace Snake
             checkCollisions();
             drawField();
             drawApple();
-            drawBorders();
             drawSnake();
             return;
         }
@@ -429,6 +432,11 @@ namespace Snake
             speedLabel.Content = "Speed: " + speed;
             timer.Interval = TimeSpan.FromSeconds(speed);
         }
+        private void Death_Sound()
+        {
+            SoundPlayer player = new SoundPlayer(@"C:\Users\f55do\Source\Repos\SnakeWPF\Snake\Resources\Death_Sound.wav");
+            player.Play();
+        }
 
         // Обработчик нажатий
         private void myKeyDown(object sender, KeyEventArgs e)
@@ -467,5 +475,5 @@ namespace Snake
             }
 
         }
-    }
+	}
 }
