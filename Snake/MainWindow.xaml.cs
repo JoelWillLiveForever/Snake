@@ -434,8 +434,8 @@ namespace Snake
         }
         private void Death_Sound()
         {
-            SoundPlayer player = new SoundPlayer(@"C:\Users\f55do\Source\Repos\SnakeWPF\Snake\Resources\Death_Sound.wav");
-            player.Play();
+            //SoundPlayer player = new SoundPlayer(@"C:\Users\f55do\Source\Repos\SnakeWPF\Snake\Resources\Death_Sound.wav");
+            //player.Play();
         }
 
         // Обработчик нажатий
@@ -475,5 +475,13 @@ namespace Snake
             }
 
         }
-	}
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
+            Window1 menu = new Window1();
+            menu.Show();
+            Close();
+        }
+    }
 }
