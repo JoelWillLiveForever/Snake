@@ -94,5 +94,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\headOfSnake.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Death_Sound.wav" />
+    <Content Include="Resources\MGS_snakescream.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        KeyDown="myKeyDown"
+        Title="Snake Game" HorizontalAlignment="Left" VerticalAlignment="Top" Height="551" Width="656" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Canvas Name="gameField" Width="640" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Rectangle Height="45" Width="58" Canvas.Left="292" Canvas.Top="195" Margin="10,0,0,0" />
+        <Label x:Name="gameStatusLabel" Content="Status" Canvas.Left="539" Canvas.Top="10" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Label x:Name="scoreLabel" Content="Score" Canvas.Left="539" Canvas.Top="41"/>
+        <Label x:Name="speedLabel" Content="Speed" Canvas.Left="539" Canvas.Top="71" RenderTransformOrigin="-0.287,-1.498"/>
+    </Canvas>
 </Window>
