@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="Snake The Game" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="Snake The Game" Height="450" Width="800" Icon="Resources/Snake.ico" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="GbDLobIzgQ0.jpg"/>
+            <ImageBrush ImageSource="Resources/Snake_Background2.jpg"/>
         </Grid.Background>
         <ComboBox HorizontalAlignment="Left" Margin="10,194,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged" FontFamily="/Snake;component/Resources/#NFS font" FontSize="20" Background="Black" BorderBrush="White" Foreground="White"/>
         <Button Content="BACK" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="120" Height="42" FontFamily="/Snake;component/Resources/#NFS font" Background="Black" BorderBrush="White" Foreground="White" Click="Button_Click"/>

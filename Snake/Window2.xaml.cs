@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +20,8 @@ namespace Snake
     /// </summary>
     public partial class Window2 : Window
     {
+        SoundPlayer ButtonClick = new SoundPlayer("../../Resources/Button_Click.wav");
+
         public Window2()
         {
             InitializeComponent();
@@ -31,6 +34,7 @@ namespace Snake
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            ButtonClick.Play();
             Window1 menu = new Window1();
             menu.Show();
             Close();

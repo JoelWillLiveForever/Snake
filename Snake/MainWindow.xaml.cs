@@ -33,6 +33,9 @@ namespace Snake
         private bool up = false;
         private bool down = false;
 
+        //private bool SpaceBar = false;
+        private bool isGameOver = false;
+
         private int dots;   // длина змейки
         private int appleX; 
         private int appleY;
@@ -42,6 +45,12 @@ namespace Snake
 
         private DispatcherTimer timer;    // таймер 
         double speed = 0.2;    // скорость игры (чем меньше, тем быстрее)
+
+        // ЗВУК
+        SoundPlayer GameOverSound = new SoundPlayer("../../Resources/Death_Sound.wav");
+        SoundPlayer AppleEaten = new SoundPlayer("../../Resources/AppleEaten.wav");
+        SoundPlayer ButtonClick = new SoundPlayer("../../Resources/Button_Click.wav");
+        MediaPlayer BackgroundMusic = new MediaPlayer();
 
         public MainWindow()
         {
@@ -73,6 +82,8 @@ namespace Snake
             timer.Tick += MainGameLoop;
             timer.Start();
             createApple();
+            BackgroundMusic.Open(new Uri("../../Resources/MGS_Encounter.wav", UriKind.RelativeOrAbsolute));
+            BackgroundMusic.Play();
         }
 
         private void createApple()
@@ -117,6 +128,7 @@ namespace Snake
         {
             if (x[0] == appleX && y[0] == appleY)
             {
+                AppleEaten.Play();
                 dots++;
                 createApple();
                 counterScore++; // Очки за яблоко
@@ -131,112 +143,47 @@ namespace Snake
             {
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
-                    gameStatusLabel.Content = "Status : Game Over";
-                    Death_Sound();
-                    MessageBox.Show("You have eaten yourself! Your score: " + counterScore);
-                    MessageBox.Show("You can continue by pressing OK");
-                    speed = 0.2;
-                    UpdateSpeed();
-                    dots = 2;
-                    counterScore = 0;
-
-                    // Начальное положение змейки:
-                    for (int j = 0; j < dots; j++)
-                    {
-                        x[j] = 192 - (j * DOT_SIZE);
-                        y[j] = 144;
-                    }
-                    scoreLabel.Content = "Score : " + counterScore;
+                    isGameOver = true;
                 }
             }
 
-            if (x[0] > SIZE - 2*DOT_SIZE)
+            if (x[0] > SIZE - 3*DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score : " + counterScore;
+                isGameOver = true;
             }
-            if (x[0] < 0 + DOT_SIZE)
+            if (x[0] < 0 + 2*DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score : " + counterScore;
+                isGameOver = true;
             }
-            if (y[0] > SIZE - 2*DOT_SIZE)
+            if (y[0] > SIZE - 3*DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score : " + counterScore;
+                isGameOver = true;
             }
-            if (y[0] < 0 + DOT_SIZE)
+            if (y[0] < 0 + 2*DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score : " + counterScore;
+                isGameOver = true;
             }
         }
-
+        
         private void update()
         {
-            gameStatusLabel.Content = "Status : In Game";
             move();
             checkApple();
             checkCollisions();
+            gameStatusLabel.Content = "Status : In Game";
             drawField();
             drawApple();
             drawSnake();
+            if (isGameOver)
+            {
+                timer.Stop();
+                gameStatusLabel.Content = "Status : Game Over";
+                BackgroundMusic.Stop();
+                GameOverSound.Play();
+                drawGameOver();
+                drawScore();
+                drawPressSpace();
+            }
             return;
         }
 
@@ -354,6 +301,106 @@ namespace Snake
             return;
         }
 
+        private void drawGamePaused()
+        {
+            Label GameOverLb = new Label();
+            GameOverLb.Content = "PAUSED";
+            GameOverLb.Margin = new Thickness
+            {
+                Left = 175,
+                Top = 156
+            };
+            GameOverLb.Height = 54;
+            GameOverLb.Width = 174;
+            GameOverLb.FontSize = 35;
+            GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            GameOverLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(GameOverLb);
+
+            return;
+        }
+
+        private void drawGameOver()
+        {
+            Label GameOverLb = new Label();
+            GameOverLb.Content = "GAME OVER";
+            GameOverLb.Margin = new Thickness
+            {
+                Left = 138,
+                Top = 158
+            };
+            GameOverLb.Height = 54;
+            GameOverLb.Width = 251;
+            GameOverLb.FontSize = 35;
+            GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            GameOverLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(GameOverLb);
+
+            return;
+        }
+
+        private void drawScore()
+        {
+            Label ScoreLb = new Label();
+            ScoreLb.Content = "YOUR SCORE : " + counterScore;
+            ScoreLb.Margin = new Thickness
+            {
+                Left = 165,
+                Top = 202
+            };
+            ScoreLb.Height = 38;
+            ScoreLb.Width = 200;
+            ScoreLb.FontSize = 20;
+            ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            ScoreLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(ScoreLb);
+
+            return;
+        }
+
+        private void drawPressEnter()
+        {
+            Label PressSpaceLb = new Label();
+            PressSpaceLb.Content = "PRESS ENTER TO CONTINUE";
+            PressSpaceLb.Margin = new Thickness
+            {
+                Left = 112,
+                Top = 231
+            };
+            PressSpaceLb.Height = 34;
+            PressSpaceLb.Width = 310;
+            PressSpaceLb.FontSize = 20;
+            PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            PressSpaceLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(PressSpaceLb);
+
+            return;
+        }
+
+        private void drawPressSpace()
+        {
+            Label PressSpaceLb = new Label();
+            PressSpaceLb.Content = "PRESS SPACE TO RESTART";
+            PressSpaceLb.Margin = new Thickness
+            {
+                Left = 112,
+                Top = 231
+            };
+            PressSpaceLb.Height = 34;
+            PressSpaceLb.Width = 310;
+            PressSpaceLb.FontSize = 20;
+            PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            PressSpaceLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(PressSpaceLb);
+
+            return;
+        }
+
         private void drawApple()
         {
             Rectangle myApple = new Rectangle();
@@ -394,15 +441,9 @@ namespace Snake
             speedLabel.Content = "Speed : " + speed;
             timer.Interval = TimeSpan.FromSeconds(speed);
         }
-        private void Death_Sound() // Та самая отсылка на MGS
-        {
-            //Uri uri = new Uri("/Resources/Death_Sound.wav", UriKind.RelativeOrAbsolute);
-			//SoundPlayer player = new SoundPlayer(uri.ToString());
-			//player.Play();
-		}
 
-        // Обработчик нажатий
-        private void myKeyDown(object sender, KeyEventArgs e)
+		// Обработчик нажатий
+		private void myKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key.ToString())
             {
@@ -430,17 +471,70 @@ namespace Snake
                     left = false;
                     right = false;
                     break;
-                default:
+                case "D":
+                    up = false;
+                    right = true;
+                    down = false;
+                    left = false;
+                    break;
+                case "A":
+                    up = false;
+                    left = true;
+                    down = false;
+                    right = false;
+                    break;
+                case "W":
+                    up = true;
+                    down = false;
+                    left = false;
+                    right = false;
+                    break;
+                case "S":
+                    up = false;
+                    down = true;
+                    left = false;
+                    right = false;
+                    break;
+                case "Escape":
+                    ButtonClick.Play();
                     timer.Stop();
-                    MessageBox.Show("Pause! Your score for now: " + counterScore + "\n To continue press Ok!");
+                    gameStatusLabel.Content = "Status : Paused";
+                    BackgroundMusic.Pause();
+                    drawGamePaused();
+                    drawScore();
+                    drawPressEnter();
+                    break;
+                case "Return":
+                    timer.Start();
+                    ButtonClick.Play();
+                    BackgroundMusic.Play();
+                    break;
+                case "Space":
+                    GameOverSound.Stop();
+                    speed = 0.2;
+                    UpdateSpeed();
+                    dots = 2;
+                    counterScore = 0;
+
+                    // Начальное положение змейки:
+                    for (int i = 0; i < dots; i++)
+                    {
+                        x[i] = 192 - (i * DOT_SIZE);
+                        y[i] = 144;
+                    }
+                    scoreLabel.Content = "Score : " + counterScore;
+                    isGameOver = false;
+                    BackgroundMusic.Open(new Uri("../../Resources/MGS_Encounter.wav", UriKind.RelativeOrAbsolute));
+                    BackgroundMusic.Play();
                     timer.Start();
                     break;
             }
-
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
+            BackgroundMusic.Stop();
+            ButtonClick.Play();
             timer.Stop();
             Window1 menu = new Window1();
             menu.Show();

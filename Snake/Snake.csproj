@@ -114,9 +114,15 @@
     <Resource Include="Resources\headOfSnake.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\MGS_Encounter.wav" />
+    <Content Include="Resources\MGS_TitleScreen.wav" />
+    <Resource Include="Snake.ico" />
+    <Resource Include="Resources\Snake.ico" />
     <Resource Include="Resources\Snake_background.jpg" />
     <Resource Include="Resources\Death_Sound.wav" />
-    <Resource Include="GbDLobIzgQ0.jpg" />
+    <Resource Include="Resources\Snake_background2.jpg" />
+    <Content Include="Resources\AppleEaten.wav" />
+    <Content Include="Resources\Button_Click.wav" />
     <Content Include="Resources\MGS_snakescream.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

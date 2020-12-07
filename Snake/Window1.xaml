@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="Snake The Game" Height="450" Width="412" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="Snake The Game" Height="450" Width="412" Icon="Resources/Snake.ico" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid Margin="0,0,-0.4,0">
         <Grid.Background>
             <ImageBrush ImageSource="Resources/Snake_background.jpg"/>

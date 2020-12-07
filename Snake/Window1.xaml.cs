@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,13 +21,20 @@ namespace Snake
     /// </summary>
     public partial class Window1 : Window
     {
+        SoundPlayer ButtonClick = new SoundPlayer("../../Resources/Button_Click.wav");
+        MediaPlayer TitleMusic = new MediaPlayer();
+
         public Window1()
         {
             InitializeComponent();
+            TitleMusic.Open(new Uri("../../Resources/MGS_TitleScreen.wav", UriKind.RelativeOrAbsolute));
+            TitleMusic.Play();
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
+            ButtonClick.Play();
+            TitleMusic.Stop();
             MainWindow menu = new MainWindow();
             menu.Show();
             Close();
@@ -34,14 +42,16 @@ namespace Snake
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            ButtonClick.Play();
             Close();
         }
 
 		private void Settings_Click(object sender, RoutedEventArgs e)
 		{
+            ButtonClick.Play();
             Window2 menu = new Window2();
             menu.Show();
-            Close();
+            Hide();
 		}
 	}
 }
