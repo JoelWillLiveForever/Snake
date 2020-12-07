@@ -11,37 +11,29 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Snake;
 
 namespace Snake
 {
     /// <summary>
-    /// Логика взаимодействия для Window1.xaml
+    /// Логика взаимодействия для Window2.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class Window2 : Window
     {
-        public Window1()
+        public Window2()
         {
             InitializeComponent();
         }
 
-        private void Play_Click(object sender, RoutedEventArgs e)
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MainWindow menu = new MainWindow();
+           
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Window1 menu = new Window1();
             menu.Show();
             Close();
         }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-		private void Settings_Click(object sender, RoutedEventArgs e)
-		{
-            Window2 menu = new Window2();
-            menu.Show();
-            Close();
-		}
-	}
+    }
 }
