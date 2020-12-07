@@ -97,6 +97,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\NFS.ttf" />
+    <Resource Include="Resources\Porche.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -105,8 +107,8 @@
     <Resource Include="Resources\headOfSnake.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="KZhWZASSbns.jpg" />
-    <Content Include="Resources\Death_Sound.wav" />
+    <Resource Include="Resources\Snake_background.jpg" />
+    <Resource Include="Resources\Death_Sound.wav" />
     <Content Include="Resources\MGS_snakescream.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

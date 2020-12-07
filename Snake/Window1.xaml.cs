@@ -25,18 +25,22 @@ namespace Snake
             InitializeComponent();
         }
 
-      
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Play_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
             MainWindow menu = new MainWindow();
             menu.Show();
             Close();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
-    }
+
+		private void Settings_Click(object sender, RoutedEventArgs e)
+		{
+            // здесь логика перехода в настройки
+            Close();
+		}
+	}
 }
