@@ -5,13 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="Snake The Game" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource MTitle}" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="GbDLobIzgQ0.jpg"/>
         </Grid.Background>
-        <ComboBox HorizontalAlignment="Left" Margin="10,194,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged" FontFamily="/Snake;component/Resources/#NFS font" FontSize="20" Background="Black" BorderBrush="White" Foreground="White"/>
-        <Button Content="BACK" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="120" Height="42" FontFamily="/Snake;component/Resources/#NFS font" Background="Black" BorderBrush="White" Foreground="White" Click="Button_Click"/>
+        <ComboBox HorizontalAlignment="Left" Margin="10,194,0,0" VerticalAlignment="Top" Width="183" SelectionChanged="ComboBox_SelectionChanged" FontFamily="/Snake;component/Resources/#NFS font" FontSize="20" Background="Black" BorderBrush="White" Foreground="White">
+            <ComboBoxItem Name="lRu" Content="{DynamicResource Ru}" Tag="ru-RU" Foreground="Black"/>
+            <ComboBoxItem Name="lEn" Content="{DynamicResource En}" Tag="en-US" Foreground="Black"/>
+            <ComboBoxItem Name="lDe" Content="{DynamicResource De}" Tag="de-DE" Foreground="Black"/>
+            <ComboBoxItem Name="lFr" Content="{DynamicResource Fr}" Tag="fr-FR" Foreground="Black"/>
+            <ComboBoxItem Name="lIt" Content="{DynamicResource It}" Tag="it-IT" Foreground="Black"/>
+            <ComboBoxItem Name="lEs" Content="{DynamicResource Es}" Tag="es-ES" Foreground="Black"/>
+            <ComboBoxItem Name="lJa" Content="{DynamicResource Ja}" Tag="ja-JP" Foreground="Black"/>
+            
+        </ComboBox>
+        <Button Content="{DynamicResource BACK}" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="183" Height="42" FontFamily="/Snake;component/Resources/#NFS font" Background="Black" BorderBrush="White" Foreground="White" Click="Button_Click" FontSize="18"/>
 
     </Grid>
 </Window>

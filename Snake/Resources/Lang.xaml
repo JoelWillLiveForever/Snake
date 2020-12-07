@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:v="clr-namespace:System;assembly=mscorlib">
+    <v:String x:Key="MTitle">Snake The Game</v:String>
+    <v:String x:Key="Status">Status</v:String>
+    <v:String x:Key="Score">Score</v:String>
+    <v:String x:Key="Speed">Speed</v:String>
+    <v:String x:Key="BACK">BACK</v:String>
+    <v:String x:Key="SETTINGS">SETTINGS</v:String>
+    <v:String x:Key="START">START</v:String>
+    <v:String x:Key="EXIT">EXIT</v:String>
+    <v:String x:Key="Game_Over">: Game Over</v:String>
+    <v:String x:Key="Message_eaten" >You have eaten yourself! Your score:</v:String>
+    <v:String x:Key="Message_continue">You can continue by pressing OK</v:String>
+    <v:String x:Key="Message_hit">You hit the wall! Your score:</v:String>
+    <v:String x:Key="In_Game">: In Game</v:String>
+    <v:String x:Key="Pause_score">Pause! Your score for now:</v:String>
+    <v:String x:Key="Pause_continue">To continue press Ok!</v:String>
+    <v:String x:Key="En">English</v:String>
+    <v:String x:Key="Ru">Russian</v:String>
+    <v:String x:Key="De">German</v:String>
+    <v:String x:Key="Fr">French</v:String>
+    <v:String x:Key="It">Italian</v:String>
+    <v:String x:Key="Es">Spanish</v:String>
+    <v:String x:Key="Ja">Japanese</v:String>
+</ResourceDictionary>

@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Globalization;
 
 namespace Snake
 {
@@ -43,12 +44,17 @@ namespace Snake
         private DispatcherTimer timer;    // таймер 
         double speed = 0.2;    // скорость игры (чем меньше, тем быстрее)
 
+        public static string language; // язык
+
+        string score_t, speed_t, status_t;
+
         public MainWindow()
         {
             InitializeComponent();
             initGame();
             drawField();
             drawBorders();
+            language = "ru-RU";
         }
 
         private void MainGameLoop(object sender, EventArgs e)
@@ -58,7 +64,13 @@ namespace Snake
 
         private void initGame()
         {
-            scoreLabel.Content = "Score : " + counterScore;
+            scoreLabel.SetResourceReference(DataContextProperty, "Score");
+            score_t = scoreLabel.Content.ToString();
+            scoreLabel.Content += " : " + counterScore;
+            speedLabel.SetResourceReference(DataContextProperty, "Speed");
+            speed_t = speedLabel.Content.ToString();
+            gameStatusLabel.SetResourceReference(DataContextProperty, "Status");
+            status_t = gameStatusLabel.Content.ToString();
             dots = 2;
 
             // Начальное положение змейки:
@@ -121,7 +133,7 @@ namespace Snake
                 createApple();
                 counterScore++; // Очки за яблоко
                 UpdateSpeed();
-                scoreLabel.Content = "Score : " + counterScore;
+                scoreLabel.Content = score_t + " : " + counterScore;
             }
         }
 
@@ -131,10 +143,14 @@ namespace Snake
             {
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
-                    gameStatusLabel.Content = "Status : Game Over";
+                    textbox.SetResourceReference(TagProperty, "Game_Over");
+                    gameStatusLabel.Content = status_t + textbox.Tag + "";
                     Death_Sound();
-                    MessageBox.Show("You have eaten yourself! Your score: " + counterScore);
-                    MessageBox.Show("You can continue by pressing OK");
+                    textbox.SetResourceReference(TagProperty, "Message_eaten");
+                    string message_1 = textbox.Tag + " " + counterScore;
+                    textbox.SetResourceReference(TagProperty, "Message_continue");
+                    string message_2 = textbox.Tag + "";
+                    MessageBox.Show(message_1 + "\n" +message_2);
                     speed = 0.2;
                     UpdateSpeed();
                     dots = 2;
@@ -146,16 +162,21 @@ namespace Snake
                         x[j] = 192 - (j * DOT_SIZE);
                         y[j] = 144;
                     }
-                    scoreLabel.Content = "Score : " + counterScore;
+                    scoreLabel.Content = score_t + " : " + counterScore;
                 }
             }
 
             if (x[0] > SIZE - 2*DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
+
+                textbox.SetResourceReference(TagProperty, "Game_Over");
+                gameStatusLabel.Content = status_t + textbox.Tag + "";
                 Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
+                textbox.SetResourceReference(TagProperty, "Message_hit");
+                string message_1 = textbox.Tag + " " + counterScore;
+                textbox.SetResourceReference(TagProperty, "Message_continue");
+                string message_2 = textbox.Tag + "";
+                MessageBox.Show(message_1 + "\n" + message_2);
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -167,14 +188,18 @@ namespace Snake
                     x[i] = 192 - (i * DOT_SIZE);
                     y[i] = 144;
                 }
-                scoreLabel.Content = "Score : " + counterScore;
+                scoreLabel.Content = score_t + " : " + counterScore;
             }
             if (x[0] < 0 + DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
+                textbox.SetResourceReference(TagProperty, "Game_Over");
+                gameStatusLabel.Content = status_t + textbox.Tag + "";
                 Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
+                textbox.SetResourceReference(TagProperty, "Message_hit");
+                string message_1 = textbox.Tag + " " + counterScore;
+                textbox.SetResourceReference(TagProperty, "Message_continue");
+                string message_2 = textbox.Tag + "";
+                MessageBox.Show(message_1 + "\n" + message_2);
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -186,14 +211,18 @@ namespace Snake
                     x[i] = 192 - (i * DOT_SIZE);
                     y[i] = 144;
                 }
-                scoreLabel.Content = "Score : " + counterScore;
+                scoreLabel.Content = score_t + " : " + counterScore;
             }
             if (y[0] > SIZE - 2*DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
+                textbox.SetResourceReference(TagProperty, "Game_Over");
+                gameStatusLabel.Content = status_t + textbox.Tag + "";
                 Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
+                textbox.SetResourceReference(TagProperty, "Message_hit");
+                string message_1 = textbox.Tag + " " + counterScore;
+                textbox.SetResourceReference(TagProperty, "Message_continue");
+                string message_2 = textbox.Tag + "";
+                MessageBox.Show(message_1 + "\n" + message_2);
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -205,14 +234,18 @@ namespace Snake
                     x[i] = 192 - (i * DOT_SIZE);
                     y[i] = 144;
                 }
-                scoreLabel.Content = "Score : " + counterScore;
+                scoreLabel.Content = score_t + " : " + counterScore;
             }
             if (y[0] < 0 + DOT_SIZE)
             {
-                gameStatusLabel.Content = "Status : Game Over";
+                textbox.SetResourceReference(TagProperty, "Game_Over");
+                gameStatusLabel.Content = status_t + textbox.Tag + "";
                 Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
+                textbox.SetResourceReference(TagProperty, "Message_hit");
+                string message_1 = textbox.Tag + " " + counterScore;
+                textbox.SetResourceReference(TagProperty, "Message_continue");
+                string message_2 = textbox.Tag + "";
+                MessageBox.Show(message_1 + "\n" + message_2);
                 speed = 0.2;
                 UpdateSpeed();
                 dots = 2;
@@ -224,13 +257,14 @@ namespace Snake
                     x[i] = 192 - (i * DOT_SIZE);
                     y[i] = 144;
                 }
-                scoreLabel.Content = "Score : " + counterScore;
+                scoreLabel.Content = score_t + " : " + counterScore;
             }
         }
 
         private void update()
         {
-            gameStatusLabel.Content = "Status : In Game";
+            textbox.SetResourceReference(TagProperty, "In_Game");
+            gameStatusLabel.Content = status_t + textbox.Tag + "";
             move();
             checkApple();
             checkCollisions();
@@ -391,7 +425,7 @@ namespace Snake
             {
                 speed -= 0.005;
 			}
-            speedLabel.Content = "Speed : " + speed;
+            speedLabel.Content = speed_t + " : " + speed;
             timer.Interval = TimeSpan.FromSeconds(speed);
         }
         private void Death_Sound() // Та самая отсылка на MGS
@@ -432,7 +466,11 @@ namespace Snake
                     break;
                 default:
                     timer.Stop();
-                    MessageBox.Show("Pause! Your score for now: " + counterScore + "\n To continue press Ok!");
+                    textbox.SetResourceReference(TagProperty, "Pause_score");
+                    string message_1 = textbox.Tag + " " + counterScore;
+                    textbox.SetResourceReference(TagProperty, "Pause_continue");
+                    string message_2 = textbox.Tag + "";
+                    MessageBox.Show(message_1 + "\n" + message_2);
                     timer.Start();
                     break;
             }
