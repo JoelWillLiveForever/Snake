@@ -15,12 +15,10 @@
     <v:String x:Key="Space_restart">「SPACE」を押してリセットします</v:String>
     <v:String x:Key="Your Score">あなたのスコア</v:String>
     <v:String x:Key="lang">言語</v:String>
-    <FontFamily x:Key="Fonts">/Snake;component/Resources/#851Gkktt</FontFamily>
+    <FontFamily x:Key="Fonts">/Snake;component/Resources/#07LightNovelPOP</FontFamily>
     <v:String x:Key="En">英語</v:String>
     <v:String x:Key="Ru">ロシア語</v:String>
     <v:String x:Key="De">ドイツ語</v:String>
     <v:String x:Key="Fr">フランス語</v:String>
-    <v:String x:Key="It">イタリア語</v:String>
-    <v:String x:Key="Es">スペイン語</v:String>
     <v:String x:Key="Ja">日本語</v:String>
 </ResourceDictionary>

@@ -20,7 +20,5 @@
     <v:String x:Key="Ru">Russian</v:String>
     <v:String x:Key="De">German</v:String>
     <v:String x:Key="Fr">French</v:String>
-    <v:String x:Key="It">Italian</v:String>
-    <v:String x:Key="Es">Spanish</v:String>
     <v:String x:Key="Ja">Japanesee</v:String>
 </ResourceDictionary>

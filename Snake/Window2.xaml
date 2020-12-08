@@ -10,16 +10,14 @@
         <Grid.Background>
             <ImageBrush ImageSource="Resources/Snake_Background2.jpg"/>
         </Grid.Background>
-        <ComboBox HorizontalAlignment="Left" Margin="10,194,0,0" VerticalAlignment="Top" Width="183" SelectionChanged="ComboBox_SelectionChanged" FontFamily="{DynamicResource Fonts}" FontSize="20" Background="Black" BorderBrush="White" Foreground="White">
+        <ComboBox HorizontalAlignment="Left" Margin="10,194,0,0" VerticalAlignment="Top" Width="183" SelectionChanged="ComboBox_SelectionChanged" FontFamily="{DynamicResource Fonts}" FontSize="20" Background="Black" BorderBrush="White" Foreground="Black">
             <ComboBoxItem Name="lRu" Content="{DynamicResource Ru}" Tag="ru-RU" Foreground="Black"/>
             <ComboBoxItem Name="lEn" Content="{DynamicResource En}" Tag="en-US" Foreground="Black"/>
             <ComboBoxItem Name="lDe" Content="{DynamicResource De}" Tag="de-DE" Foreground="Black"/>
             <ComboBoxItem Name="lFr" Content="{DynamicResource Fr}" Tag="fr-FR" Foreground="Black"/>
-            <ComboBoxItem Name="lIt" Content="{DynamicResource It}" Tag="it-IT" Foreground="Black"/>
-            <ComboBoxItem Name="lEs" Content="{DynamicResource Es}" Tag="es-ES" Foreground="Black"/>
             <ComboBoxItem Name="lJa" Content="{DynamicResource Ja}" Tag="ja-JP" Foreground="Black"/>
         </ComboBox>
-        <Button Content="{DynamicResource BACK}" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="183" Height="47" FontSize="22"  FontFamily="/Snake;component/Resources/#NFS font" Background="Black" BorderBrush="White" Foreground="White" Click="Back_Click"/>
+        <Button Content="{DynamicResource BACK}" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="183" Height="47" FontSize="22"  FontFamily="{DynamicResource Fonts}" Background="Black" BorderBrush="White" Foreground="White" Click="Back_Click"/>
 
     </Grid>
 </Window>

@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Globalization;
 
 namespace Snake
 {
@@ -51,9 +52,12 @@ namespace Snake
         SoundPlayer AppleEaten = new SoundPlayer("../../Resources/AppleEaten.wav");
         SoundPlayer ButtonClick = new SoundPlayer("../../Resources/Button_Click.wav");
         MediaPlayer BackgroundMusic = new MediaPlayer();
+
 		internal static string language;
 
-		public MainWindow()
+        string score_t, speed_t, status_t;
+
+        public MainWindow()
         {
             InitializeComponent();
             initGame();
@@ -68,7 +72,13 @@ namespace Snake
 
         private void initGame()
         {
-            scoreLabel.Content = "Score : " + counterScore;
+            scoreLabel.SetResourceReference(DataContextProperty, "Score");
+            score_t = scoreLabel.Content.ToString();
+            scoreLabel.Content += " : " + counterScore;
+            speedLabel.SetResourceReference(DataContextProperty, "Speed");
+            speed_t = speedLabel.Content.ToString();
+            gameStatusLabel.SetResourceReference(DataContextProperty, "Status");
+            status_t = gameStatusLabel.Content.ToString();
             dots = 2;
 
             // Начальное положение змейки:
@@ -134,7 +144,8 @@ namespace Snake
                 createApple();
                 counterScore++; // Очки за яблоко
                 UpdateSpeed();
-                scoreLabel.Content = "Score : " + counterScore;
+                textbox.SetResourceReference(TagProperty, "Score");
+                scoreLabel.Content = textbox.Tag + " : " + counterScore;
             }
         }
 
@@ -171,14 +182,16 @@ namespace Snake
             move();
             checkApple();
             checkCollisions();
-            gameStatusLabel.Content = "Status : In Game";
+            textbox.SetResourceReference(TagProperty, "In_Game");
+            gameStatusLabel.Content = status_t + textbox.Tag;
             drawField();
             drawApple();
             drawSnake();
             if (isGameOver)
             {
                 timer.Stop();
-                gameStatusLabel.Content = "Status : Game Over";
+                textbox.SetResourceReference(TagProperty, "Game_Over");
+                gameStatusLabel.Content = status_t + textbox.Tag;
                 BackgroundMusic.Stop();
                 GameOverSound.Play();
                 drawGameOver();
@@ -305,7 +318,8 @@ namespace Snake
         private void drawGamePaused()
         {
             Label GameOverLb = new Label();
-            GameOverLb.Content = "PAUSED";
+            textbox.SetResourceReference(TagProperty, "Paused");
+            GameOverLb.Content = textbox.Tag;
             GameOverLb.Margin = new Thickness
             {
                 Left = 175,
@@ -314,7 +328,14 @@ namespace Snake
             GameOverLb.Height = 54;
             GameOverLb.Width = 174;
             GameOverLb.FontSize = 35;
-            GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            if (App.language == "ja-JP")
+            {
+                GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+            }
+            else
+            {
+                GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
             GameOverLb.BorderBrush = Brushes.White;
 
             gameField.Children.Add(GameOverLb);
@@ -345,16 +366,24 @@ namespace Snake
         private void drawScore()
         {
             Label ScoreLb = new Label();
-            ScoreLb.Content = "YOUR SCORE : " + counterScore;
+            textbox.SetResourceReference(TagProperty, "Your Score");
+            ScoreLb.Content = textbox.Tag + " : " + counterScore;
             ScoreLb.Margin = new Thickness
             {
                 Left = 165,
                 Top = 202
             };
+            if (App.language == "ja-JP")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+            }
+            else
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
             ScoreLb.Height = 38;
             ScoreLb.Width = 200;
             ScoreLb.FontSize = 20;
-            ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
             ScoreLb.BorderBrush = Brushes.White;
 
             gameField.Children.Add(ScoreLb);
@@ -365,16 +394,45 @@ namespace Snake
         private void drawPressEnter()
         {
             Label PressSpaceLb = new Label();
-            PressSpaceLb.Content = "PRESS ENTER TO CONTINUE";
-            PressSpaceLb.Margin = new Thickness
+            textbox.SetResourceReference(TagProperty, "Enter_continue");
+            PressSpaceLb.Content = textbox.Tag;
+            if (App.language == "ru-RU")
             {
-                Left = 112,
-                Top = 231
-            };
-            PressSpaceLb.Height = 34;
-            PressSpaceLb.Width = 310;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 58,
+                    Top = 233
+                };
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 429;
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            else
+            {
+                if (App.language == "ja-JP")
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+                }
+                else
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+                }
+            }
             PressSpaceLb.FontSize = 20;
-            PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
             PressSpaceLb.BorderBrush = Brushes.White;
 
             gameField.Children.Add(PressSpaceLb);
@@ -385,16 +443,45 @@ namespace Snake
         private void drawPressSpace()
         {
             Label PressSpaceLb = new Label();
-            PressSpaceLb.Content = "PRESS SPACE TO RESTART";
-            PressSpaceLb.Margin = new Thickness
+            textbox.SetResourceReference(TagProperty, "Space_restart");
+            PressSpaceLb.Content = textbox.Tag;
+            if (App.language == "ru-RU")
             {
-                Left = 112,
-                Top = 231
-            };
-            PressSpaceLb.Height = 34;
-            PressSpaceLb.Width = 310;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 58,
+                    Top = 233
+                };
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 429;
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            else
+            {
+                if (App.language == "ja-JP")
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+                }
+                else
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+                }
+            }
             PressSpaceLb.FontSize = 20;
-            PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
             PressSpaceLb.BorderBrush = Brushes.White;
 
             gameField.Children.Add(PressSpaceLb);
@@ -439,7 +526,7 @@ namespace Snake
             {
                 speed -= 0.005;
 			}
-            speedLabel.Content = "Speed : " + speed;
+            speedLabel.Content = speed_t + speed;
             timer.Interval = TimeSpan.FromSeconds(speed);
         }
 
@@ -499,7 +586,8 @@ namespace Snake
                 case "Escape":
                     ButtonClick.Play();
                     timer.Stop();
-                    gameStatusLabel.Content = "Status : Paused";
+                    textbox.SetResourceReference(TagProperty, "Paused");
+                    gameStatusLabel.Content = status_t + textbox.Tag;
                     BackgroundMusic.Pause();
                     drawGamePaused();
                     drawScore();
@@ -523,7 +611,7 @@ namespace Snake
                         x[i] = 192 - (i * DOT_SIZE);
                         y[i] = 144;
                     }
-                    scoreLabel.Content = "Score : " + counterScore;
+                    scoreLabel.Content = score_t + " : " + counterScore;
                     isGameOver = false;
                     BackgroundMusic.Open(new Uri("../../Resources/MGS_Encounter.wav", UriKind.RelativeOrAbsolute));
                     BackgroundMusic.Play();
