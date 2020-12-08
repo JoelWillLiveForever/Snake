@@ -41,7 +41,7 @@ namespace Snake
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             ButtonClick.Play();
             Close();
         }
@@ -51,7 +51,7 @@ namespace Snake
             ButtonClick.Play();
             Window2 menu = new Window2();
             menu.Show();
-            Hide();
+            Close();
 		}
 	}
 }

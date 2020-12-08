@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace Snake
 {
@@ -29,10 +30,22 @@ namespace Snake
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
+            ComboBox cb = sender as ComboBox;
+            MainWindow.language = (cb.SelectedItem as ComboBoxItem).Tag.ToString();
+
+            if (MainWindow.language != null)
+            {
+                CultureInfo lang = new CultureInfo(MainWindow.language);
+
+                if (lang != null)
+                {
+                    App.Language = lang;
+                }
+
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Back_Click(object sender, RoutedEventArgs e)
         {
             ButtonClick.Play();
             Window1 menu = new Window1();

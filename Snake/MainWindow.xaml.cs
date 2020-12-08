@@ -51,8 +51,9 @@ namespace Snake
         SoundPlayer AppleEaten = new SoundPlayer("../../Resources/AppleEaten.wav");
         SoundPlayer ButtonClick = new SoundPlayer("../../Resources/Button_Click.wav");
         MediaPlayer BackgroundMusic = new MediaPlayer();
+		internal static string language;
 
-        public MainWindow()
+		public MainWindow()
         {
             InitializeComponent();
             initGame();
