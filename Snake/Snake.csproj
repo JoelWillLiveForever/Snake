@@ -133,6 +133,7 @@
     <Resource Include="Resources\headOfSnake.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Apple.png" />
     <Content Include="Resources\MGS_Encounter.wav" />
     <Content Include="Resources\MGS_TitleScreen.wav" />
     <Resource Include="Snake.ico" />
