@@ -15,7 +15,7 @@
     <v:String x:Key="Space_restart">APPUYEZ SUR SPACE POUR REDÉMARRER</v:String>
     <v:String x:Key="Your Score">VOTRE SCORE</v:String>
     <v:String x:Key="lang">LANGUE</v:String>
-    <FontFamily x:Key="Fonts">/Snake;component/Resources/#NFS font</FontFamily>
+    <FontFamily x:Key="Fonts">/Snake;component/Resources/#times</FontFamily>
     <v:String x:Key="En">Anglais</v:String>
     <v:String x:Key="Ru">Russe</v:String>
     <v:String x:Key="De">Allemand</v:String>

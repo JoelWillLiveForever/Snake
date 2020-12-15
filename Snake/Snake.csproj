@@ -124,6 +124,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\LightNovelPOP.otf" />
+    <Resource Include="Resources\times.ttf" />
     <Resource Include="Resources\NFS.ttf" />
   </ItemGroup>
   <ItemGroup>

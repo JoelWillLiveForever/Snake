@@ -12,9 +12,9 @@
         <Label x:Name="scoreLabel" Content="{DynamicResource Score}" Canvas.Left="511" Canvas.Top="36" Width="203" FontSize="14" FontFamily="{DynamicResource Fonts}"/>
         <Label x:Name="speedLabel" Content="{DynamicResource Speed}" Canvas.Left="511" Canvas.Top="60" RenderTransformOrigin="-0.287,-1.498" Width="203" FontSize="14" FontFamily="{DynamicResource Fonts}"/>
         <Button Content="{DynamicResource BACK}" Canvas.Left="539" Canvas.Top="458" Width="144" Background="Black" BorderBrush="White" Foreground="White" Click="Back_Click" Height="39" FontSize="22" FontFamily="{DynamicResource Fonts}"/>
-        <!--<Label x:Name="GameOverLb1" Content="PAUSED" Canvas.Left="175" Canvas.Top="156" Height="54" Width="174" FontSize="35" FontFamily="/Snake;component/Resources/#NFS font"/>
-        <Label x:Name="GameOverLb_Copy" Content="YOUR SCORE : 10" Canvas.Left="165" Canvas.Top="202" Height="38" Width="200" FontSize="20" FontFamily="/Snake;component/Resources/#NFS font"/>
-        <Label x:Name="GameOverLb_Copy1" Content="НАЖМИТЕ ENTER ДЛЯ ПРОДОЛЖЕНИЯ" Canvas.Left="61" Canvas.Top="233" Height="34" Width="429" FontSize="20" FontFamily="/Snake;component/Resources/#NFS font"/>-->
+        <!--<Label x:Name="GameOverLb1" Content="PAUSED" Canvas.Left="181" Canvas.Top="165" Height="54" Width="177" FontSize="35" FontFamily="/Snake;component/Resources/#NFS font" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="GameOverLb_Copy" Content="YOUR SCORE : 10" Canvas.Left="138" Canvas.Top="202" Height="38" Width="247" FontSize="20" FontFamily="{DynamicResource Fonts}" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="GameOverLb_Copy1" Content="НАЖМИТЕ ENTER ДЛЯ ПРОДОЛЖЕНИЯ" Canvas.Left="61" Canvas.Top="233" Height="34" Width="653" FontSize="20"  FontFamily="{DynamicResource Fonts}" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>-->
         <TextBox x:Name="textbox" Height="23" Canvas.Left="539" TextWrapping="Wrap" Tag="" Canvas.Top="123" Width="120" IsEnabled="False" Visibility="Hidden"/>
     </Canvas>
 </Window>

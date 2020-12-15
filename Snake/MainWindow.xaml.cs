@@ -350,7 +350,7 @@ namespace Snake
             Label GameOverLb = new Label();
             textbox.SetResourceReference(TagProperty, "Paused");
             GameOverLb.Content = textbox.Tag;
-            GameOverLb.Margin = new Thickness
+                  GameOverLb.Margin = new Thickness
             {
                 Left = 175,
                 Top = 156
@@ -366,8 +366,6 @@ namespace Snake
             {
                 GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
             }
-            GameOverLb.BorderBrush = Brushes.White;
-
             gameField.Children.Add(GameOverLb);
 
             return;
@@ -385,8 +383,8 @@ namespace Snake
             GameOverLb.Height = 54;
             GameOverLb.Width = 251;
             GameOverLb.FontSize = 35;
-            GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
             GameOverLb.BorderBrush = Brushes.White;
+            GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
 
             gameField.Children.Add(GameOverLb);
 
@@ -403,19 +401,31 @@ namespace Snake
                 Left = 165,
                 Top = 202
             };
-            if (App.language == "ja-JP")
-            {
-                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
-            }
-            else
-            {
-                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
-            }
             ScoreLb.Height = 38;
             ScoreLb.Width = 200;
             ScoreLb.FontSize = 20;
             ScoreLb.BorderBrush = Brushes.White;
-
+            if (App.language == "en-US")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            if (App.language == "ru-RU")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            if (App.language == "de-DE")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+            }
+            if (App.language == "fr-FR")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+            }
+            if (App.language == "ja-JP")
+            {
+               ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+            }
+            
             gameField.Children.Add(ScoreLb);
 
             return;
@@ -462,6 +472,31 @@ namespace Snake
                     PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
                 }
             }
+            if (App.language == "de-DE")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+            
+            if (App.language == "fr-FR")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+
+           
             PressSpaceLb.FontSize = 20;
             PressSpaceLb.BorderBrush = Brushes.White;
 
@@ -510,6 +545,29 @@ namespace Snake
                     PressSpaceLb.Width = 310;
                     PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
                 }
+            }
+            if (App.language == "de-DE")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+
+            if (App.language == "fr-FR")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
             }
             PressSpaceLb.FontSize = 20;
             PressSpaceLb.BorderBrush = Brushes.White;
