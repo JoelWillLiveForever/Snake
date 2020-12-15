@@ -55,6 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Window2.xaml.cs">
+      <DependentUpon>Window2.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,6 +73,34 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Lang.fr-FR.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Lang.ja-JP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Lang.de-DE.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Lang.ru-RU.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Lang.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -90,6 +124,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\times.ttf" />
+    <Resource Include="Resources\LightNovelPOP.otf" />
+    <Resource Include="Resources\NFS.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -98,7 +135,16 @@
     <Resource Include="Resources\headOfSnake.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Death_Sound.wav" />
+    <Resource Include="Resources\Apple.png" />
+    <Content Include="Resources\MGS_Encounter.wav" />
+    <Content Include="Resources\MGS_TitleScreen.wav" />
+    <Resource Include="Snake.ico" />
+    <Resource Include="Resources\Snake.ico" />
+    <Resource Include="Resources\Snake_background.jpg" />
+    <Resource Include="Resources\Death_Sound.wav" />
+    <Resource Include="Resources\Snake_background2.jpg" />
+    <Content Include="Resources\AppleEaten.wav" />
+    <Content Include="Resources\Button_Click.wav" />
     <Content Include="Resources\MGS_snakescream.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

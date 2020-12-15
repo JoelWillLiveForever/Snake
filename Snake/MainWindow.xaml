@@ -6,11 +6,15 @@
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
         KeyDown="myKeyDown"
-        Title="Snake Game" HorizontalAlignment="Left" VerticalAlignment="Top" Height="551" Width="656" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
-    <Canvas Name="gameField" Width="640" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Rectangle Height="45" Width="58" Canvas.Left="292" Canvas.Top="195" Margin="10,0,0,0" />
-        <Label x:Name="gameStatusLabel" Content="Status" Canvas.Left="539" Canvas.Top="10" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        <Label x:Name="scoreLabel" Content="Score" Canvas.Left="539" Canvas.Top="41"/>
-        <Label x:Name="speedLabel" Content="Speed" Canvas.Left="539" Canvas.Top="71" RenderTransformOrigin="-0.287,-1.498"/>
+        Title="Snake The Game" HorizontalAlignment="Left" VerticalAlignment="Top" Height="547" Width="730.702" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Snake.ico">
+    <Canvas Name="gameField" Width="724" Height="518" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Label x:Name="gameStatusLabel" Content="{DynamicResource Status}" Canvas.Left="511" Canvas.Top="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="203" FontSize="14" FontFamily="{DynamicResource Fonts}"/>
+        <Label x:Name="scoreLabel" Content="{DynamicResource Score}" Canvas.Left="511" Canvas.Top="36" Width="203" FontSize="14" FontFamily="{DynamicResource Fonts}"/>
+        <Label x:Name="speedLabel" Content="{DynamicResource Speed}" Canvas.Left="511" Canvas.Top="60" RenderTransformOrigin="-0.287,-1.498" Width="203" FontSize="14" FontFamily="{DynamicResource Fonts}"/>
+        <Button Content="{DynamicResource BACK}" Canvas.Left="539" Canvas.Top="458" Width="144" Background="Black" BorderBrush="White" Foreground="White" Click="Back_Click" Height="39" FontSize="22" FontFamily="{DynamicResource Fonts}"/>
+        <!--<Label x:Name="GameOverLb1" Content="PAUSED" Canvas.Left="175" Canvas.Top="156" Height="54" Width="174" FontSize="35" FontFamily="/Snake;component/Resources/#NFS font"/>
+        <Label x:Name="GameOverLb_Copy" Content="YOUR SCORE : 10" Canvas.Left="165" Canvas.Top="202" Height="38" Width="200" FontSize="20" FontFamily="/Snake;component/Resources/#NFS font"/>
+        <Label x:Name="GameOverLb_Copy1" Content="НАЖМИТЕ ENTER ДЛЯ ПРОДОЛЖЕНИЯ" Canvas.Left="61" Canvas.Top="233" Height="34" Width="429" FontSize="20" FontFamily="/Snake;component/Resources/#NFS font"/>-->
+        <TextBox x:Name="textbox" Height="23" Canvas.Left="539" TextWrapping="Wrap" Tag="" Canvas.Top="123" Width="120" IsEnabled="False" Visibility="Hidden"/>
     </Canvas>
 </Window>

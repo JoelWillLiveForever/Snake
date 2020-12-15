@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
@@ -14,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Globalization;
+using System.Threading;
 
 namespace Snake
 {
@@ -32,25 +35,43 @@ namespace Snake
         private bool up = false;
         private bool down = false;
 
-        private int dots;   // длина змейки
-        private int appleX; 
+        //private bool SpaceBar = false;
+        private bool isGameOver = false;
+
+        private int appleX;
         private int appleY;
+        private int dots = 2;   // длина змейки
         private int counterScore = 0;   // счёт
         private int[] x = new int[ALL_DOTS];
         private int[] y = new int[ALL_DOTS];
-        
-        private Image dot;      // текстура змейки
-        private Image apple;    // текстура яблока
-        private Image border;   // текстура границы карты
-        private Image field;    // текстура игрового поля
 
         private DispatcherTimer timer;    // таймер 
-        double speed = 0.2;    // скорость игры (чем меньше, тем быстрее)
+
+        private const int startSpeed = 160;
+        private const int speedSubstractor = 5;
+
+        private int speed = startSpeed;    // скорость игры (чем меньше, тем быстрее)
+
+        // ЗВУК
+        SoundPlayer GameOverSound = new SoundPlayer("../../Resources/Death_Sound.wav");
+        SoundPlayer AppleEaten = new SoundPlayer("../../Resources/AppleEaten.wav");
+        SoundPlayer ButtonClick = new SoundPlayer("../../Resources/Button_Click.wav");
+        MediaPlayer BackgroundMusic = new MediaPlayer();
+
+        internal static string language = App.language;
+
+        string score_t, speed_t, status_t;
+
+        private Image myApple;
+        private Image SnakeHead;
+
+        private Rectangle field;
+        private Rectangle snakeDot;
+        private List<Rectangle> allSnake;
 
         public MainWindow()
         {
             InitializeComponent();
-            loadImages();
             initGame();
             drawField();
             drawBorders();
@@ -58,13 +79,44 @@ namespace Snake
 
         private void MainGameLoop(object sender, EventArgs e)
         {
-            update();
+            move();
+            checkCollisions();
+
+            if (!isGameOver)
+            {
+                drawField();
+                drawApple();
+                drawSnake();
+                checkApple();
+                textbox.SetResourceReference(TagProperty, "In_Game");
+                gameStatusLabel.Content = status_t + textbox.Tag;
+            }
+            else
+            {
+                timer.Stop();
+                textbox.SetResourceReference(TagProperty, "Game_Over");
+                gameStatusLabel.Content = status_t + textbox.Tag;
+                BackgroundMusic.Stop();
+                GameOverSound.Play();
+                drawGameOver();
+                drawScore();
+                drawPressSpace();
+            }
+
+            Thread.Sleep(speed);
         }
 
         private void initGame()
         {
-            scoreLabel.Content = "Score: " + counterScore;
-            dots = 2;
+            Thread.CurrentThread.Priority = ThreadPriority.Highest;
+
+            scoreLabel.SetResourceReference(DataContextProperty, "Score");
+            score_t = scoreLabel.Content.ToString();
+            scoreLabel.Content += " : " + counterScore;
+            speedLabel.SetResourceReference(DataContextProperty, "Speed");
+            speed_t = speedLabel.Content.ToString();
+            gameStatusLabel.SetResourceReference(DataContextProperty, "Status");
+            status_t = gameStatusLabel.Content.ToString();
 
             // Начальное положение змейки:
             for (int i = 0; i < dots; i++)
@@ -74,33 +126,20 @@ namespace Snake
             }
 
             timer = new DispatcherTimer();
-            UpdateSpeed();
             timer.Tick += MainGameLoop;
             timer.Start();
+
+            UpdateSpeed();
             createApple();
+
+            BackgroundMusic.Open(new Uri("../../Resources/MGS_Encounter.wav", UriKind.RelativeOrAbsolute));
+            BackgroundMusic.Play();
         }
 
         private void createApple()
-        {   
-            do
-            {
-                appleX = new Random().Next(DOT_SIZE, SIZE - DOT_SIZE);
-            } while (appleX % DOT_SIZE != 0);
-            do
-            {
-                appleY = new Random().Next(DOT_SIZE, SIZE - DOT_SIZE);
-            } while (appleY % DOT_SIZE != 0);
-        }
-
-        private void loadImages()
         {
-            //OpenFileDialog openFile = new OpenFileDialog();
-            //if (openFile.ShowDialog() == true)
-            //{
-            //    border.Source = new BitmapImage(new Uri(openFile.FileName));
-            //}
-            //border.HorizontalAlignment = HorizontalAlignment.Left;
-            //border.VerticalAlignment = VerticalAlignment.Top;
+            appleX = new Random().Next(1, (SIZE - DOT_SIZE) / DOT_SIZE) * DOT_SIZE;
+            appleY = new Random().Next(1, (SIZE - DOT_SIZE) / DOT_SIZE) * DOT_SIZE;
         }
 
         private void move()
@@ -133,194 +172,97 @@ namespace Snake
         {
             if (x[0] == appleX && y[0] == appleY)
             {
+                AppleEaten.Play();
                 dots++;
                 createApple();
                 counterScore++; // Очки за яблоко
                 UpdateSpeed();
-                scoreLabel.Content = "Score: " + counterScore;
+                textbox.SetResourceReference(TagProperty, "Score");
+                scoreLabel.Content = textbox.Tag + " : " + counterScore;
+
+                allSnake.Add(Clone(snakeDot));
+                allSnake[allSnake.Count - 1].Margin = new Thickness
+                {
+                    Left = x[allSnake.Count - 1],
+                    Top = y[allSnake.Count - 1],
+                };
             }
         }
 
         private void checkCollisions()
         {
+            if (x[0] >= (SIZE - DOT_SIZE) || x[0] < DOT_SIZE || y[0] < DOT_SIZE || y[0] >= (SIZE - DOT_SIZE))
+            {
+                isGameOver = true;
+                return;
+            }
+
             for (int i = dots; i > 0; i--)
             {
                 if (i > 4 && x[0] == x[i] && y[0] == y[i])
                 {
-                    gameStatusLabel.Content = "Status: Game Over";
-                    Death_Sound();
-                    MessageBox.Show("You have eaten yourself! Your score: " + counterScore);
-                    MessageBox.Show("You can continue by pressing OK");
-                    speed = 0.2;
-                    UpdateSpeed();
-                    dots = 2;
-                    counterScore = 0;
-
-                    // Начальное положение змейки:
-                    for (int j = 0; j < dots; j++)
-                    {
-                        x[j] = 192 - (j * DOT_SIZE);
-                        y[j] = 144;
-                    }
-                    scoreLabel.Content = "Score: " + counterScore;
+                    isGameOver = true;
+                    break;
                 }
             }
-
-            if (x[0] > SIZE - 2*DOT_SIZE)
-            {
-                gameStatusLabel.Content = "Status: Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score: " + counterScore;
-            }
-            if (x[0] < 0 + DOT_SIZE)
-            {
-                gameStatusLabel.Content = "Status: Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score: " + counterScore;
-            }
-            if (y[0] > SIZE - 2*DOT_SIZE)
-            {
-                gameStatusLabel.Content = "Status: Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score: " + counterScore;
-            }
-            if (y[0] < 0 + DOT_SIZE)
-            {
-                gameStatusLabel.Content = "Status: Game Over";
-                Death_Sound();
-                MessageBox.Show("You hit the wall! Your score: " + counterScore);
-                MessageBox.Show("You can continue by pressing OK");
-                speed = 0.2;
-                UpdateSpeed();
-                dots = 2;
-                counterScore = 0;
-
-                // Начальное положение змейки:
-                for (int i = 0; i < dots; i++)
-                {
-                    x[i] = 192 - (i * DOT_SIZE);
-                    y[i] = 144;
-                }
-                scoreLabel.Content = "Score: " + counterScore;
-            }
-        }
-
-        private void update()
-        {
-            gameStatusLabel.Content = "Status: In Game";
-            move();
-            checkApple();
-            checkCollisions();
-            drawField();
-            drawApple();
-            drawSnake();
-            return;
         }
 
         private void drawBorders()
         {
-            if (border == null)
+            Rectangle borderTop = new Rectangle();
+            Rectangle borderBottom = new Rectangle();
+            Rectangle borderLeft = new Rectangle();
+            Rectangle borderRight = new Rectangle();
+
+            borderTop.Fill = borderBottom.Fill = borderLeft.Fill = borderRight.Fill = Brushes.Black;
+            borderTop.Stroke = borderBottom.Stroke = borderLeft.Stroke = borderRight.Stroke = Brushes.Black;
+            borderTop.HorizontalAlignment = borderBottom.HorizontalAlignment = borderLeft.HorizontalAlignment = borderRight.HorizontalAlignment = HorizontalAlignment.Left;
+            borderTop.VerticalAlignment = borderBottom.VerticalAlignment = borderLeft.VerticalAlignment = borderRight.VerticalAlignment = VerticalAlignment.Top;
+
+            borderTop.Width = borderBottom.Width = SIZE;
+            borderTop.Height = borderBottom.Height = DOT_SIZE;
+
+            borderLeft.Width = borderRight.Width = DOT_SIZE;
+            borderLeft.Height = borderRight.Height = SIZE - 2 * DOT_SIZE;
+
+            // Top border
+            borderTop.Margin = new Thickness
             {
-                Rectangle borderTop = new Rectangle();
-                Rectangle borderBottom = new Rectangle();
-                Rectangle borderLeft = new Rectangle();
-                Rectangle borderRight = new Rectangle();
+                Left = 0,
+                Top = 0,
+            };
+            gameField.Children.Add(borderTop);
 
-                borderTop.Fill = borderBottom.Fill = borderLeft.Fill = borderRight.Fill = Brushes.Black;
-                borderTop.Stroke = borderBottom.Stroke = borderLeft.Stroke = borderRight.Stroke = Brushes.Black;
-                borderTop.HorizontalAlignment = borderBottom.HorizontalAlignment = borderLeft.HorizontalAlignment = borderRight.HorizontalAlignment = HorizontalAlignment.Left;
-                borderTop.VerticalAlignment = borderBottom.VerticalAlignment = borderLeft.VerticalAlignment = borderRight.VerticalAlignment = VerticalAlignment.Top;
-                
-                borderTop.Width = borderBottom.Width = SIZE;
-                borderTop.Height = borderBottom.Height = DOT_SIZE;
+            // Bottom border
+            borderTop.Margin = new Thickness
+            {
+                Left = 0,
+                Top = SIZE - DOT_SIZE,
+            };
+            gameField.Children.Add(borderBottom);
 
-                borderLeft.Width = borderRight.Width = DOT_SIZE;
-                borderLeft.Height = borderRight.Height = SIZE - 2 * DOT_SIZE;
+            // Left border
+            borderLeft.Margin = new Thickness
+            {
+                Left = 0,
+                Top = DOT_SIZE,
+            };
+            gameField.Children.Add(borderLeft);
 
-                // Top border
-                borderTop.Margin = new Thickness
-                {
-                    Left = 0,
-                    Top = 0,
-                };
-                gameField.Children.Add(borderTop);
-
-                // Bottom border
-                borderTop.Margin = new Thickness
-                {
-                    Left = 0,
-                    Top = SIZE - DOT_SIZE,
-                };
-                gameField.Children.Add(borderBottom);
-
-                // Left border
-                borderLeft.Margin = new Thickness
-                {
-                    Left = 0,
-                    Top = DOT_SIZE,
-                };
-                gameField.Children.Add(borderLeft);
-
-                // Right border
-                borderRight.Margin = new Thickness
-                {
-                    Left = SIZE - DOT_SIZE,
-                    Top = DOT_SIZE,
-                };
-                gameField.Children.Add(borderRight);
-
-                return;
-            }
-            // генерация если есть текстура
-            // ...
-
-
+            // Right border
+            borderRight.Margin = new Thickness
+            {
+                Left = SIZE - DOT_SIZE,
+                Top = DOT_SIZE,
+            };
+            gameField.Children.Add(borderRight);
         }
 
         private void drawField()
         {
             if (field == null)
             {
-                Rectangle field = new Rectangle();
+                field = new Rectangle();
 
                 field.Fill = Brushes.GreenYellow;
                 field.Stroke = Brushes.GreenYellow;
@@ -335,145 +277,424 @@ namespace Snake
                     Left = DOT_SIZE,
                     Top = DOT_SIZE,
                 };
-                gameField.Children.Add(field);
-
-                return;
             }
-            // если есть текстура
-
-
+            gameField.Children.Remove(field);
+            gameField.Children.Add(field);
         }
 
         private void drawSnake()
         {
-            if (dot == null)
+            if (SnakeHead == null && snakeDot == null && allSnake == null)
             {
-                Image SnakeHead = new Image(); // голова змеи
+                SnakeHead = new Image(); // голова змеи
 
                 SnakeHead.Source = new BitmapImage(new Uri("Resources/headOfSnake.png", UriKind.Relative));
                 SnakeHead.HorizontalAlignment = HorizontalAlignment.Left;
                 SnakeHead.VerticalAlignment = VerticalAlignment.Top;
                 SnakeHead.Width = SnakeHead.Height = DOT_SIZE;
 
-                SnakeHead.Margin = new Thickness
+                snakeDot = new Rectangle();
+
+                snakeDot.Fill = Brushes.DarkGreen;
+                snakeDot.Stroke = Brushes.DarkGreen;
+                snakeDot.HorizontalAlignment = HorizontalAlignment.Left;
+                snakeDot.VerticalAlignment = VerticalAlignment.Top;
+
+                snakeDot.Width = snakeDot.Height = DOT_SIZE;
+
+                allSnake = new List<Rectangle>();
+
+                for (int i = 0; i < dots; i++)
                 {
-                    Left = x[0],
-                    Top = y[0],
-                };
-                gameField.Children.Add(SnakeHead);
-
-                for (int i = 1; i < dots; i++) // остальное тело змеи
-                {
-                    Rectangle snakeDot = new Rectangle();
-
-                    snakeDot.Fill = Brushes.DarkGreen;
-                    snakeDot.Stroke = Brushes.DarkGreen;
-                    snakeDot.HorizontalAlignment = HorizontalAlignment.Left;
-                    snakeDot.VerticalAlignment = VerticalAlignment.Top;
-
-                    snakeDot.Width = snakeDot.Height = DOT_SIZE;
-
-                    // apple
-                    snakeDot.Margin = new Thickness
-                    {
-                        Left = x[i],
-                        Top = y[i],
-                    };
-                    gameField.Children.Add(snakeDot);
+                    allSnake.Add(Clone(snakeDot));
                 }
-
-                return;
             }
-            // если есть текстура
 
+            gameField.Children.Remove(SnakeHead);
+
+            SnakeHead.Margin = new Thickness
+            {
+                Left = x[0],
+                Top = y[0],
+            };
+
+            gameField.Children.Add(SnakeHead);
+
+            for (int i = 1; i < dots; i++) // остальное тело змеи
+            {
+                gameField.Children.Remove(allSnake[i]);
+
+                // apple
+                allSnake[i].Margin = new Thickness
+                {
+                    Left = x[i],
+                    Top = y[i],
+                };
+
+                gameField.Children.Add(allSnake[i]);
+            }
+        }
+
+        private void drawGamePaused()
+        {
+            Label GameOverLb = new Label();
+            textbox.SetResourceReference(TagProperty, "Paused");
+            GameOverLb.Content = textbox.Tag;
+            GameOverLb.Margin = new Thickness
+            {
+                Left = 175,
+                Top = 156
+            };
+            GameOverLb.Height = 54;
+            GameOverLb.Width = 174;
+            GameOverLb.FontSize = 35;
+            if (App.language == "ja-JP")
+            {
+                GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+            }
+            else
+            {
+                GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            gameField.Children.Add(GameOverLb);
+
+            return;
+        }
+
+        private void drawGameOver()
+        {
+            Label GameOverLb = new Label();
+            GameOverLb.Content = "GAME OVER";
+            GameOverLb.Margin = new Thickness
+            {
+                Left = 138,
+                Top = 158
+            };
+            GameOverLb.Height = 54;
+            GameOverLb.Width = 251;
+            GameOverLb.FontSize = 35;
+            GameOverLb.BorderBrush = Brushes.White;
+            GameOverLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+
+            gameField.Children.Add(GameOverLb);
+
+            return;
+        }
+
+        private void drawScore()
+        {
+            Label ScoreLb = new Label();
+            textbox.SetResourceReference(TagProperty, "Your Score");
+            ScoreLb.Content = textbox.Tag + " : " + counterScore;
+            ScoreLb.Margin = new Thickness
+            {
+                Left = 165,
+                Top = 202
+            };
+            ScoreLb.Height = 38;
+            ScoreLb.Width = 200;
+            ScoreLb.FontSize = 20;
+            ScoreLb.BorderBrush = Brushes.White;
+
+            if (App.language == "en-US")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            else
+            if (App.language == "ru-RU")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            else
+            if (App.language == "de-DE")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+            }
+            else
+            if (App.language == "fr-FR")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+            }
+            else
+            if (App.language == "ja-JP")
+            {
+                ScoreLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+            }
+
+            gameField.Children.Add(ScoreLb);
+
+            return;
+        }
+
+        private void drawPressEnter()
+        {
+            Label PressSpaceLb = new Label();
+            textbox.SetResourceReference(TagProperty, "Enter_continue");
+            PressSpaceLb.Content = textbox.Tag;
+            if (App.language == "ru-RU")
+            {
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 58,
+                    Top = 233
+                };
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 429;
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            else
+            {
+                if (App.language == "ja-JP")
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+                }
+                else
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+                }
+            }
+            if (App.language == "de-DE")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+
+            if (App.language == "fr-FR")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+
+
+            PressSpaceLb.FontSize = 20;
+            PressSpaceLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(PressSpaceLb);
+
+            return;
+        }
+
+        private void drawPressSpace()
+        {
+            Label PressSpaceLb = new Label();
+            textbox.SetResourceReference(TagProperty, "Space_restart");
+            PressSpaceLb.Content = textbox.Tag;
+            if (App.language == "ru-RU")
+            {
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 58,
+                    Top = 233
+                };
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 429;
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+            }
+            else
+            {
+                if (App.language == "ja-JP")
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#07LightNovelPOP");
+                }
+                else
+                {
+                    PressSpaceLb.Margin = new Thickness
+                    {
+                        Left = 112,
+                        Top = 231
+                    };
+                    PressSpaceLb.Height = 34;
+                    PressSpaceLb.Width = 310;
+                    PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#NFS font");
+                }
+            }
+            if (App.language == "de-DE")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+
+            if (App.language == "fr-FR")
+            {
+                PressSpaceLb.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./resources/#times");
+                PressSpaceLb.Height = 34;
+                PressSpaceLb.Width = 8000;
+                PressSpaceLb.Margin = new Thickness
+                {
+                    Left = 61,
+                    Top = 233
+                };
+            }
+            PressSpaceLb.FontSize = 20;
+            PressSpaceLb.BorderBrush = Brushes.White;
+
+            gameField.Children.Add(PressSpaceLb);
+
+            return;
         }
 
         private void drawApple()
         {
-            if (apple == null)
+            if (myApple == null)
             {
-                Rectangle myApple = new Rectangle();
+                myApple = new Image();
+                myApple.Source = new BitmapImage(new Uri("Resources/Apple.png", UriKind.Relative));
 
-                //SolidColorBrush[] brushes = { Brushes.Red, Brushes.Yellow, Brushes.Orange, Brushes.Purple };
-                //int indexOfColor = new Random().Next(brushes.Length);
-
-                //myApple.Fill = brushes[indexOfColor];
-                //myApple.Stroke = brushes[indexOfColor];
-                
-                myApple.Fill = Brushes.Red;
-                myApple.Stroke = Brushes.Red;
                 myApple.HorizontalAlignment = HorizontalAlignment.Left;
                 myApple.VerticalAlignment = VerticalAlignment.Top;
 
                 myApple.Width = myApple.Height = DOT_SIZE;
-
-                // apple
-                myApple.Margin = new Thickness
-                {
-                    Left = appleX,
-                    Top = appleY,
-                };
-
-                gameField.Children.Add(myApple);
-
-                return;
             }
-            // если есть текстура
+            gameField.Children.Remove(myApple);
 
+            // apple
+            myApple.Margin = new Thickness
+            {
+                Left = appleX,
+                Top = appleY,
+            };
+
+            gameField.Children.Add(myApple);
         }
-        
 
         private void UpdateSpeed()
         {
-			if (counterScore % 2 == 0 && counterScore != 0)
+            if (speed == speedSubstractor)
+                return;
+
+            if (counterScore % 2 == 0)
             {
-                speed -= 0.005;
-			}
-            speedLabel.Content = "Speed: " + speed;
-            timer.Interval = TimeSpan.FromSeconds(speed);
-        }
-        private void Death_Sound()
-        {
-            SoundPlayer player = new SoundPlayer(@"C:\Users\f55do\Source\Repos\SnakeWPF\Snake\Resources\Death_Sound.wav");
-            player.Play();
+                speed -= speedSubstractor;
+            }
+
+            speedLabel.Content = "Speed: " + (startSpeed - speed) / speedSubstractor;
         }
 
         // Обработчик нажатий
         private void myKeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key.ToString())
+            switch (e.Key)
             {
-                case "Right":
-                    up = false;
+                case Key.Right:
+                case Key.D:
+                    down = up = left = false;
                     right = true;
-                    down = false;
-                    left = false;
                     break;
-                case "Left":
-                    up = false;
+                case Key.Left:
+                case Key.A:
+                    down = up = right = false;
                     left = true;
-                    down = false;
-                    right = false;
                     break;
-                case "Up":
+                case Key.Up:
+                case Key.W:
+                    left = right = down = false;
                     up = true;
-                    down = false;
-                    left = false;
-                    right = false;
                     break;
-                case "Down":
-                    up = false;
+                case Key.Down:
+                case Key.S:
+                    left = right = up = false;
                     down = true;
-                    left = false;
-                    right = false;
                     break;
-                default:
+                case Key.Escape:
+                    ButtonClick.Play();
                     timer.Stop();
-                    MessageBox.Show("Pause! Your score for now: " + counterScore + "\n To continue press Ok!");
+                    textbox.SetResourceReference(TagProperty, "Paused");
+                    gameStatusLabel.Content = status_t + textbox.Tag;
+                    BackgroundMusic.Pause();
+                    drawGamePaused();
+                    drawScore();
+                    drawPressEnter();
+                    break;
+                case Key.Return:
                     timer.Start();
+                    ButtonClick.Play();
+                    BackgroundMusic.Play();
+                    break;
+                case Key.Space:
+                    if (isGameOver)
+                    {
+                        GameOverSound.Stop();
+                        speed = 160;
+                        UpdateSpeed();
+                        dots = 2;
+                        counterScore = 0;
+
+                        // Начальное положение змейки:
+                        for (int i = 0; i < dots; i++)
+                        {
+                            x[i] = 192 - (i * DOT_SIZE);
+                            y[i] = 144;
+                        }
+                        scoreLabel.Content = score_t + " : " + counterScore;
+                        isGameOver = false;
+                        BackgroundMusic.Open(new Uri("../../Resources/MGS_Encounter.wav", UriKind.RelativeOrAbsolute));
+                        BackgroundMusic.Play();
+                        timer.Start();
+                    }
                     break;
             }
-
         }
-	}
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            BackgroundMusic.Stop();
+            ButtonClick.Play();
+            timer.Stop();
+            Window1 menu = new Window1();
+            menu.Show();
+            Close();
+        }
+
+        public Rectangle Clone(Rectangle rectangle)
+        {
+            return new Rectangle
+            {
+                Fill = rectangle.Fill,
+                Stroke = rectangle.Stroke,
+                HorizontalAlignment = rectangle.HorizontalAlignment,
+                VerticalAlignment = rectangle.VerticalAlignment,
+                Width = rectangle.Width,
+                Height = rectangle.Height
+            };
+        }
+    }
 }
