@@ -1,21 +1,13 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Media;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Globalization;
 using System.Threading;
 
 namespace Snake
@@ -28,7 +20,7 @@ namespace Snake
         public const int SIZE = 512;   // размер игрового поля в px
         public const int DOT_SIZE = 16;    // размер одной ячейки змейки в px
         
-        private const int ALL_DOTS = 512;
+        private const int ALL_DOTS = SIZE / DOT_SIZE;
 
         // направления движения змейки
         private bool right = true;
@@ -69,9 +61,6 @@ namespace Snake
         private List<Rectangle> allSnake;
 
         SnakeLogic myLogic;
-
-        public GameField(bool isTest) { 
-        }
 
         public GameField()
         {
@@ -136,7 +125,7 @@ namespace Snake
             timer.Start();
 
             UpdateSpeed();
-            myLogic.createApple(SIZE, DOT_SIZE);    // Генерация яблочка
+            myLogic.createApple(SIZE, DOT_SIZE, x, y);    // Генерация яблочка
 
             BackgroundMusic.Open(new Uri("../../Resources/MGS_Encounter.wav", UriKind.RelativeOrAbsolute));
             BackgroundMusic.Play();
@@ -174,7 +163,7 @@ namespace Snake
             {
                 AppleEaten.Play();
                 dots++;
-                myLogic.createApple(SIZE, DOT_SIZE);
+                myLogic.createApple(SIZE, DOT_SIZE, x, y);
                 counterScore++; // Очки за яблоко
                 UpdateSpeed();
                 textbox.SetResourceReference(TagProperty, "Score");
