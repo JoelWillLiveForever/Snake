@@ -595,7 +595,7 @@ namespace Snake
                 speed -= speedSubstractor;
             }
 
-            speedLabel.Content = "Speed: " + (startSpeed - speed) / speedSubstractor;
+            speedLabel.Content = speed_t + (startSpeed - speed) / speedSubstractor;
         }
 
         // Обработчик нажатий
