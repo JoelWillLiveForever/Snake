@@ -15,7 +15,7 @@ namespace Snake
     public partial class App : Application
     {
         private static List<CultureInfo> m_Languages = new List<CultureInfo>();
-        public static string language;
+        public static string language = "en-US";
 
         public static CultureInfo Language
         {
