@@ -161,6 +161,7 @@ namespace Snake
         {
             if (x[0] == myLogic.getAppleX && y[0] == myLogic.getAppleY)
             {
+                //gameField.Children.Clear(); // оптимизация, высвобождение памяти
                 AppleEaten.Play();
                 dots++;
                 myLogic.createApple(SIZE, DOT_SIZE, x, y);

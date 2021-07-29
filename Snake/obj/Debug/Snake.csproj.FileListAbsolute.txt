@@ -2,11 +2,9 @@ C:\Users\f55do\Source\Repos\SnakeWPF\Snake\bin\Debug\Snake.exe.config
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\bin\Debug\Snake.exe
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\bin\Debug\Snake.pdb
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.csprojAssemblyReference.cache
-C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\MainWindow.g.cs
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\App.g.cs
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake_MarkupCompile.cache
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake_MarkupCompile.lref
-C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\MainWindow.baml
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.g.resources
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.Properties.Resources.resources
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.csproj.GenerateResource.cache
@@ -14,10 +12,6 @@ C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.csproj.CoreCompileInp
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.exe
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake.pdb
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Snake_Content.g.cs
-C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Window1.g.cs
-C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Window1.baml
-C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Window2.g.cs
-C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Window2.baml
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Resources\Lang.de-DE.baml
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Resources\Lang.ru-RU.baml
 C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Resources\Lang.baml
@@ -50,3 +44,9 @@ C:\Users\Joel\Desktop\EndProjects\Snake\Snake\obj\Debug\Settings.g.cs
 C:\Users\Joel\Desktop\EndProjects\Snake\Snake\obj\Debug\GameField.baml
 C:\Users\Joel\Desktop\EndProjects\Snake\Snake\obj\Debug\MainMenu.baml
 C:\Users\Joel\Desktop\EndProjects\Snake\Snake\obj\Debug\Settings.baml
+C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\GameField.g.cs
+C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\MainMenu.g.cs
+C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Settings.g.cs
+C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\GameField.baml
+C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\MainMenu.baml
+C:\Users\f55do\Source\Repos\SnakeWPF\Snake\obj\Debug\Settings.baml
