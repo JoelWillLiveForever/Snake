@@ -74,10 +74,11 @@ namespace Snake
         {
             move();
             checkCollisions();
+            drawField();
+            drawBorders();
 
             if (!isGameOver)
             {
-                drawField();
                 drawApple();
                 drawSnake();
                 checkApple();
